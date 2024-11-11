@@ -160,7 +160,7 @@
 		</array>
 	</dict>
 	<key>createdby</key>
-	<string>Acidham</string>
+	<string>Acidham (Updated by Alex)</string>
 	<key>description</key>
 	<string>Search in Browser History and Bookmarks</string>
 	<key>disabled</key>
@@ -858,6 +858,25 @@ Pressing `CMD` to enter `Other Actions...`:
 				<key>required</key>
 				<false/>
 				<key>text</key>
+				<string>Firefox</string>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string></string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>firefox</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
 				<string>Safari</string>
 			</dict>
 			<key>description</key>
@@ -960,7 +979,7 @@ Pressing `CMD` to enter `Other Actions...`:
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>4.1.4</string>
+	<string>4.2.1</string>
 	<key>webaddress</key>
 	<string>https://github.com/Acidham/chromium-hist-bookmarks</string>
 </dict>
