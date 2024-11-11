@@ -23,7 +23,8 @@ HISTORY_MAP = {
     "vivaldi": "Library/Application Support/Vivaldi/Default/History",
     "edge": "Library/Application Support/Microsoft Edge/Default/History",
     "arc": "Library/Application Support/Arc/User Data/Default/History",
-    "safari": "Library/Safari/History.db"
+    "safari": "Library/Safari/History.db",
+    "firefox": "Library/Application Support/Firefox/Profiles/p7euw3iv.default-release/places.sqlite"
 }
 
 # Get Browser Histories to load per env (true/false)
@@ -136,6 +137,7 @@ def sql(db: str) -> list:
     Returns:
         list: result list of dictionaries (Url, Title, VisiCount)
     """
+    Tools.log(db)
     res = []
     history_db = f"/tmp/{uuid.uuid1()}"
     try:
@@ -154,6 +156,15 @@ def sql(db: str) -> list:
 						history_items.url != '' order by visit_time DESC
                 """
             # SQL statement for Chromium Brothers
+            elif "Firefox" in db:
+                select_statement = f"""
+                    select H.url, H.title, H.visit_count, H.last_visit_date
+                    FROM moz_places H
+                    WHERE H.url IS NOT NULL AND
+                        H.title IS NOT NULL AND
+                        H.url != ''
+                    ORDER BY H.last_visit_date DESC
+                """
             else:
                 select_statement = f"""
                     SELECT DISTINCT urls.url, urls.title, urls.visit_count, (urls.last_visit_time/1000000 + (strftime('%s', '1601-01-01')))
