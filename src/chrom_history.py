@@ -114,6 +114,7 @@ def get_histories(dbs: list, query: str) -> list:
         results = remove_ignored_domains(results, ignored_domains)
     # Reduce search results to 30
     results = results[:30]
+    # Tools.log(f"{results}")
     # Sort by element. Element 2=visited, 3=recent
     sort_by = 3 if sort_recent else 2
     results = Tools.sortListTuple(results, sort_by)  # Sort based on visits
@@ -178,7 +179,7 @@ def sql(db: str) -> list:
             # SQL statement for Chromium Brothers
             elif "Firefox" in db:
                 select_statement = f"""
-                    select H.url, H.title, H.visit_count, DATETIME(ROUND(H.last_visit_date / 1000), 'unixepoch')
+                    select H.url, H.title, H.visit_count, ROUND(H.last_visit_date / 1000000)
                     FROM moz_places H
                     WHERE H.url IS NOT NULL AND
                         H.title IS NOT NULL AND
