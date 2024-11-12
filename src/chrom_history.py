@@ -24,14 +24,33 @@ HISTORY_MAP = {
     "edge": "Library/Application Support/Microsoft Edge/Default/History",
     "arc": "Library/Application Support/Arc/User Data/Default/History",
     "safari": "Library/Safari/History.db",
-    "firefox": "Library/Application Support/Firefox/Profiles/p7euw3iv.default-release/places.sqlite"
+    "firefox": "Library/Application Support/Firefox/"
 }
+
+
+def firefox_db(ff_dir:str) -> str:
+    ff_dir = os.path.join(os.path.expanduser("~"), ff_dir)
+    profiles = os.path.join(ff_dir, "profiles.ini")
+    profile_dir = ''
+    with open(profiles, 'rt') as fin:
+        for line in fin:
+            Tools.log(line)
+            if line.startswith('Default=Profiles/'):
+                profile_dir = line[8:-1]
+                break
+    if profile_dir:
+        return os.path.join(ff_dir, profile_dir, 'places.sqlite')
+
+    return ''
 
 # Get Browser Histories to load per env (true/false)
 HISTORIES = list()
 for k in HISTORY_MAP.keys():
     if Tools.getEnvBool(k):
-        HISTORIES.append(HISTORY_MAP.get(k))
+        if k == 'firefox':
+            HISTORIES.append(firefox_db(HISTORY_MAP.get(k)))
+        else:
+            HISTORIES.append(HISTORY_MAP.get(k))
 
 # Get ignored Domains settings
 d = Tools.getEnv("ignored_domains", None)
@@ -46,6 +65,7 @@ sort_recent = Tools.getEnvBool("sort_recent")
 
 # Date format settings
 DATE_FMT = Tools.getEnv("date_format", default='%d. %B %Y')
+
 
 
 def history_paths() -> list:
@@ -158,7 +178,7 @@ def sql(db: str) -> list:
             # SQL statement for Chromium Brothers
             elif "Firefox" in db:
                 select_statement = f"""
-                    select H.url, H.title, H.visit_count, H.last_visit_date
+                    select H.url, H.title, H.visit_count, DATETIME(ROUND(H.last_visit_date / 1000), 'unixepoch')
                     FROM moz_places H
                     WHERE H.url IS NOT NULL AND
                         H.title IS NOT NULL AND
