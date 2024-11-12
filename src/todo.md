@@ -1,0 +1,2 @@
+- [X] Implement discovery of Firefox DB
+- [X] Add a script to build the plugin
